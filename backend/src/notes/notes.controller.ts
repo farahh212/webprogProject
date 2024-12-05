@@ -11,38 +11,43 @@ export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
   @Get()
-  async getAllNotes(): Promise<notesDocument[]> {
+  async getAllNotes(): Promise<Notes[]> {
     return await this.notesService.findAll();
   }
 
   //GET: notes by objectId
   @Get('id/:noteId')
-  async findByIdNote(@Param('noteId') noteId: string): Promise<notesDocument> {
-    const nid = new mongoose.Types.ObjectId(noteId);
-    return this.notesService.findByIdNote(nid);
+  async findByIdNote(@Param('noteId') noteId: mongoose.Types.ObjectId): Promise<notesDocument> {
+    return this.notesService.findByIdNote(noteId);
   }
 
   //GET NOTES by usernmae,coursecode,last updated
-  @Get()
-  async findNote(@Param('username') username: string, @Param('course_code')course_code:string, @Param('lastUpdated')lastUpdated:Date): Promise<notesDocument> {
-    return this.notesService.findNote(username,course_code,lastUpdated);
-  }
+  // @Get()
+  // async findNote(@Param('username') username: string, @Param('course_code')course_code:string, @Param('lastUpdated')lastUpdated:Date): Promise<notesDocument> {
+  //   return this.notesService.findNote(username,course_code,lastUpdated);
+  // }
 
-  //CREATE NOTE
+  // CREATE NOTE
   @Post()
-  async createNote(@Body() createNoteDto: CreateNoteDto): Promise<notesDocument> {
+  async createNote(@Body() createNoteDto: CreateNoteDto): Promise<Notes> {
     return await this.notesService.createNote(createNoteDto);
   }
 
   //DELETE NOTE
   @Delete()
-  async deleteNote(@Param('username') username: string, @Param('course_code')course_code:string, @Param('lastUpdated')lastUpdated:Date): Promise<notesDocument> {
-    return await this.notesService.deleteNote(username,course_code,lastUpdated);
+  async deleteNote(@Param('noteId') noteId: mongoose.Types.ObjectId){
+     await this.notesService.deleteNote(noteId);
+  }
+
+  //DELETE NOTE by username
+  @Delete()
+  async deleteNoteByUsername(@Param('username') username:string){
+    await this.notesService.deleteNoteByUsername(username);
   }
 
 //UPDATE NOTE
   @Put()
-  async updateNote(@Param('username') username: string, @Param('course_code')course_code:string, @Param('lastUpdated')lastUpdated:Date,@Body() updateNoteDto: UpdateNoteDto,): Promise<notesDocument> {
-    return await this.notesService.updateNote(username,course_code,lastUpdated, updateNoteDto);
+  async updateNote(@Param('noteId') noteId: mongoose.Types.ObjectId,@Body() updateNoteDto: UpdateNoteDto,): Promise<notesDocument> {
+    return await this.notesService.updateNote(noteId, updateNoteDto);
   }
 }

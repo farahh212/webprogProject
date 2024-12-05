@@ -31,24 +31,6 @@ export class StudentService {
         @Inject(forwardRef(() => ProgressService)) private readonly progressService: ProgressService,
         @Inject(forwardRef(() => ResponsesService)) private readonly responsesService: UsersService,
     ){}
-
-    //GET: all courses student enrolled in and not outdated                 DONE EXCEPT USERNAME NEED TO GET FROM TOKEN
- //   async getCoursesForStudent(): Promise<Courses[]> {
-        // Step 1: Get the courses array for the user
-  //      const coursesArray = await this.usersService.findCoursesArray(this.userModel.username);
-      
-        // Step 2: Fetch all courses by their ObjectIds
-   //     const courses = await this.courseModel.find({
-    //      _id: { $in: coursesArray }, // Match ObjectIds from coursesArray
-   //     }).exec();
-      
-        // Step 3: Filter non-outdated courses
-    //    const validCourses = courses.filter((course) => !course.isOutdated);
-      
-  //      return validCourses;
-    //  }
-
-
     // Method to enroll a student in a course
     async enrollStudentInCourse(username: string, courseId: string): Promise<userDocument> {
         // Find the student by username
@@ -58,7 +40,7 @@ export class StudentService {
         }
     
         // Find the course by its ID
-        const course = await this.courseModel.findById(courseId).exec();
+        const course = await this.courseModel.findOne({courseId,Unavailable:false}).exec();
         if (!course) {
           throw new NotFoundException(`Course with ID ${courseId} not found`);
         }

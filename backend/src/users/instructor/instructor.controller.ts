@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
 import * as mongoose from 'mongoose';
-import { UsersSchema } from '../users.schema';
+import { Users, UsersSchema } from '../users.schema';
 import { Courses } from 'src/courses/courses.schema';
 import { CoursesService } from 'src/courses/courses.service';
 import { InstructorService } from './instructor.service';
@@ -34,6 +34,13 @@ async setRating(@Param('ObjectId') ObjectId: string, @Param('score')score:number
  const objectId = new mongoose.Types.ObjectId(ObjectId)
  await this.instructorService.setRating(objectId,score);
 }
+
+@Delete(':username')
+async deleteInstructor(@Param('username') username: string): Promise<{ message: string }> {
+  return await this.instructorService.deleteInstructor(username);
+}
+
+
  
 
 

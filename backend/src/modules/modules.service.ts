@@ -384,14 +384,39 @@ async getTotalRating( ObjectId: mongoose.Types.ObjectId): Promise<number> {
 
   return notes;
 }
-//Delete NOTE FOR A SPECIFIC NOTE
-async deleteNote(@Param('title')title:string, @Param('username')username:string,@Param('lastUpdated')lastUpdated:Date): Promise<void>{
-  const course = await this.coursesService.getCourseForModule(title);
+ //GET NOTES FOR A SPECIFIC USER
+ async getNotesForUserAndNote(username: string, title: string): Promise<notesDocument[]> {
   const module = await this.findByTitle(title) as moduleDocument;
   if (!module || !module._id) {
     throw new NotFoundException(`Module with title "${title}" not found`);
   }
-  const note= await this.notesService.findNote(username,course.course_code,lastUpdated);
+
+  const notesId = await this.studentService.getAllNotesForModule(module._id, username);
+  if (!notesId || notesId.length === 0) {
+    return []; 
+  }
+
+  const notes: notesDocument[] = [];
+  for (const noteId of notesId) {
+    const note = await this.notesService.findByIdNote(noteId);
+    notes.push(note); // Add the note to the array
+  }
+
+  return notes;
+}
+
+//GET A SPECIFIC NOTE FOR A SPEICIFC MODULE
+async getNoteForUser(notetId: mongoose.Types.ObjectId): Promise<notesDocument>{
+ return await this.notesService.findByIdNote(notetId);
+}
+
+//Delete NOTE FOR A SPECIFIC NOTE
+async deleteNote(title:string,username:string,notetId: mongoose.Types.ObjectId): Promise<void>{
+  const module = await this.findByTitle(title) as moduleDocument;
+  if (!module || !module._id) {
+    throw new NotFoundException(`Module with title "${title}" not found`);
+  }
+  const note= await this.notesService.findByIdNote(notetId);
   const student = await this.usersService.findUserByUsername(username);
 
   if (student.notes.has(module._id)) {
@@ -403,20 +428,20 @@ async deleteNote(@Param('title')title:string, @Param('username')username:string,
   }
   await student.save(); 
 
-  await this.notesService.deleteNote(username,course.course_code,lastUpdated);
+  await this.notesService.deleteNote(notetId);
 
 }
 
 
  //CREATE NOTE FOR A SPECIFIC NOTE
- async createNote(title:string,username:string,content:string): Promise<notesDocument>{
+ async createNote(title:string,username:string,content: string): Promise<notesDocument>{
   const course = await this.coursesService.getCourseForModule(title);
   const module= await this.findByTitle(title) as moduleDocument;
 
   const notesDto = {
     username: username, 
     course_code: course.course_code,
-    content: content
+    content: content,
   };
   const note = await this.notesService.createNote(notesDto) as notesDocument;
   const user = await this.usersService.findUserByUsername(username);
@@ -426,14 +451,14 @@ async deleteNote(@Param('title')title:string, @Param('username')username:string,
  }
 
  //UPDATE NOTE FOR A SPECIFIC NOTE
-async UpdateNote(title:string,username:string,lastUpdated:Date,contentNew:string): Promise<notesDocument>{
-  const course = await this.coursesService.getCourseForModule(title);
+async UpdateNote(notetId: mongoose.Types.ObjectId,contentNew:string): Promise<notesDocument>{
   const notesDto = {
     content:contentNew,
   };
- const note= await this.notesService.updateNote(username,course.course_code,lastUpdated, notesDto);
+ const note= await this.notesService.updateNote(notetId, notesDto);
   return note;
 }
+
 
 }
 

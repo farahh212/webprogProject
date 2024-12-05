@@ -25,11 +25,10 @@ export class UsersController {
     return this.usersService.findUserByUsername(username);
   }
  //GETT ALL USERS ENROLLED IN A COURSE
-//  @Get() 
-//    async getEnrolledStudents(@Param('objectId')objectId: string): Promise<userDocument[]>{
-//      const oid = mongoose.Types.ObjectId(objectId);
-//      return this.usersService.getEnrolledStudents(oid);
-//    }
+ @Get() 
+   async getEnrolledStudents(@Param('objectId')objectId: mongoose.Types.ObjectId): Promise<string[]>{
+     return this.usersService.getEnrolledStudents(objectId);
+   }
 
 
 //GET API for searching users, with certain 

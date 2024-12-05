@@ -48,11 +48,7 @@ export class ProgressService {
     }
 
 
-    async update(
-        course_code: string,
-        Username: string,
-        updateData: { completion_percentage: number; last_accessed: Date }
-      ): Promise<Progress> {
+async update(course_code: string,Username: string,updateData: { completion_percentage: number; last_accessed: Date }): Promise<Progress> {
         return await this.progressModel.findOneAndUpdate(
           { Username, course_code },
           updateData,
@@ -68,11 +64,15 @@ export class ProgressService {
 
 
 
-
-      //deletee mmkn admin 
-      async delete(course_code: string, Username: string): Promise<Progress> {
+//deletee mmkn admin 
+async delete(course_code: string, Username: string): Promise<Progress> {
         return await this.progressModel.findOneAndDelete({ course_code, Username });
-    }
+}
+
+//DELETE Progress by username
+async deleteProgressByUsername(Username: string) {
+  await this.progressModel.findOneAndDelete({ Username });
+}
     
      
 

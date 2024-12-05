@@ -171,4 +171,10 @@ return await this.coursesService.getCourseForModule(moduleTitle);
 async getStudentCourses(@Param('username') username: string) {
   return await this.coursesService.getNonOutdatedCoursesForStudent(username);
 }
+
+//DELETE COURSE (MAKE IT UNAVAILABLE)
+@Put(':course_code/delete')
+  async markCourseAsUnavailable(@Param('course_code') courseId: string) {
+    return await this.coursesService.deleteCourse(courseId);
+  }
 }

@@ -28,6 +28,9 @@ export class Courses  {
   @Prop()
   created_at: Date; 
 
+  @Prop()
+  Unavailable: boolean;
+
 
   // Reference to Module documents using ObjectId
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Module' }] })

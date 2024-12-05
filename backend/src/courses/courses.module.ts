@@ -19,6 +19,7 @@ import { StudentService } from 'src/users/student/student.service';
 import { InstructorService } from 'src/users/instructor/instructor.service';
 import { ContentService } from 'src/modules/content/content.service';
 import { ContentSchema } from 'src/modules/content/content.schema';
+import { ProgressService } from 'src/progress/progress.service';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Courses', schema: CoursesSchema }]),
@@ -32,8 +33,8 @@ import { ContentSchema } from 'src/modules/content/content.schema';
      // Ensure this is imported here too
   ],
 
-  providers: [CoursesService,ModulesService,QuizzesService,QuestionsService,NotesService,StudentService,InstructorService,UsersService,ContentService],
+  providers: [CoursesService,ModulesService,QuizzesService,QuestionsService,NotesService,StudentService,InstructorService,UsersService,ContentService,ProgressService],
   controllers: [CoursesController],
-  exports:[CoursesService,ModulesService,QuizzesService,QuestionsService,NotesService,StudentService,InstructorService,UsersService,ContentService]
+  exports:[CoursesService,ModulesService,QuizzesService,QuestionsService,NotesService,StudentService,InstructorService,UsersService,ContentService,ProgressService]
 })
 export class CoursesModule {}

@@ -13,51 +13,51 @@ import { ValidationPipe } from '@nestjs/common';
 export class StudentController {
     constructor(private readonly studentService: StudentService) {}
 
-  //GET: get courses for user  
-  //  @Get()
-    //async getCoursesForStudent(): Promise<Courses[]> {
-     //hanroo7 user ngyb array of courses ,loop put courses in array get course by objectId WHEre is outdated false
-   //  return this.studentService.getCoursesForStudent();
-    //}
-
     // Enroll student in a specific course
-  @Post(':username/enroll/:courseId')
-  async enrollStudentInCourse(
-    @Param('username') username: string,       // Get student username from URL
-    @Param('courseId') courseId: string,       // Get courseId from URL
-  ) {
+  @Put(':username/enroll/:courseId')
+  async enrollStudentInCourse(@Param('username') username: string,@Param('courseId') courseId: string) {
     return this.studentService.enrollStudentInCourse(username, courseId);
   }
 
-  //Create student for register
 
-
-  //Update student profile
-  @Put(':username')
-  async updateProfile(
-    @Param('username') username: string,
-    @Body() updateUserDto: UpdateUserDto, // The data to update the student profile
-  ) {
-    const updatedStudent = await this.studentService.updateProfile(username, updateUserDto);
-    return {
-      message: 'Student profile updated successfully.',
-      student: updatedStudent,
-    };
+  // GET STUDENT SCORE
+  @Get(':username/score/:objectId')
+  async getStudentScore(@Param('username') username: string,@Param('objectId') objectId: string,): Promise<number | null> {
+    return await this.studentService.getStudentScore(username, new mongoose.Types.ObjectId(objectId));
   }
- //Create new student for register 
-  @Post('register')
-  @UsePipes(new ValidationPipe({ whitelist: true })) // Automatically validate DTO
-  async registerStudent(@Body() createStudentDto: CreateUserDto) {
-    return this.studentService.createStudent(createStudentDto);
+
+  // GET STUDENT LEVEL
+  @Get(':username/level/:objectId')
+  async getStudentLevel(@Param('username') username: string,@Param('objectId') objectId: string,): Promise<string | null> {
+    return await this.studentService.getStudentLevel(username,new mongoose.Types.ObjectId(objectId));
+  }
+
+  // SET STUDENT SCORE
+  @Put(':username/score/:objectId')
+  async setStudentScore(@Param('username') username: string,@Param('objectId') objectId: string,@Body('newScore') newScore: number,): Promise<void> {
+    await this.studentService.setStudentScore(username, new mongoose.Types.ObjectId(objectId), newScore);
+  }
+  
+
+   // SET STUDENT Level
+   @Put(':username/score/:objectId')
+   async setStudentLevel(@Param('username') username: string,@Param('objectId') objectId: string,@Body('newScore') newScore: number,): Promise<void> {
+     await this.studentService.setStudentLevel(username, new mongoose.Types.ObjectId(objectId), newScore);
+   }
+
+  // GET ALL NOTES OBJECT IDS FOR A SPECIFIC MODULE
+  @Get(':username/notes/:moduleId')
+  async getAllNotesForModule(@Param('username') username: string,@Param('moduleId') moduleId: string,): Promise<mongoose.Types.ObjectId[] | null> {
+    return await this.studentService.getAllNotesForModule(new mongoose.Types.ObjectId(moduleId), username);
   }
 
  //Delete student, their progress,responses and notes 
-  // @Delete(':username')
-  // async deleteStudent(@Param('username') username: string) {
-  //   // Deleting the student and associated data
-  //   await this.studentService.deleteStudentAndRelatedData(username);
-  //   return { message: 'Student and related data deleted successfully.' };
-  // }
+  @Delete(':username')
+  async deleteStudent(@Param('username') username: string) {
+    // Deleting the student and associated data
+    await this.studentService.deleteStudentAndRelatedData(username);
+    return { message: 'Student and related data deleted successfully.' };
+  }
 }
 
 

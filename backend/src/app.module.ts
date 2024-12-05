@@ -11,10 +11,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 //import { QuizzesModule } from './quizzes/quizzes.module';
 //import { QuestionsModule } from './questions/questions.module';
 //import {NotesModule} from './notes/notes.module'
+import { LogModule } from './log/log.module';
 
 @Module({
   //imports: [ProgressModule, UsersModule, CoursesModule, ModulesModule, ResponsesModule, QuizzesModule, QuestionsModule,NotesModule,MongooseModule.forRoot('mongodb://localhost:27017/E-Learning')],
-  imports: [ CoursesModule,ModulesModule,MongooseModule.forRoot('mongodb://localhost:27017/E-Learning')],
+  imports: [ CoursesModule,ModulesModule,MongooseModule.forRoot('mongodb://localhost:27017/E-Learning'), LogModule],
   
   controllers: [AppController],
   providers: [AppService],

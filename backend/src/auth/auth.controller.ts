@@ -1,14 +1,31 @@
-import { Body, Controller, HttpException, HttpStatus, Post, Res } from '@nestjs/common';
+ import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signInDto';
 import { RegisterDto } from './dto/registerDto';
+import { AuthGuard } from './guards/authentication.guard';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
 
+    @Get('get-cookie-data')
+    getCookieData(@Req() req: Request) {
+        const cookies = req.cookies;
+        const userData = cookies['user_data'] || null;
+
+        if (!userData) {
+            throw new HttpException('No user data found in the cookie', HttpStatus.NOT_FOUND);
+        }
+
+        return { userData };
+    }
+
+ 
+
+
     @Post('login')
-    async login(@Body() signInDto: SignInDto,@Res({ passthrough: true }) res) {
+    async login(@Body() signInDto: SignInDto,@Res({ passthrough: true }) res: Response) {
         try {
             console.log('Attempting login...');
             // Call the AuthService to handle login

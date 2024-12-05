@@ -7,6 +7,7 @@ export class CreateCourseDto {
     readonly category: string;
     readonly difficulty_level: string;
     readonly created_by: string;
+    readonly Unavilable: boolean = false; 
    // readonly created_at: Date;
     readonly  modules: mongoose.Schema.Types.ObjectId[];
     // readonly  totalRating:number=0;
